@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:pm="http://primefaces.org/mobile">
+	  
+<ui:composition template="/WEB-INF/templates/layoutBase.xhtml">
+
+<!-- Secao header -->
+   <ui:define name="header">    
+      <h:form>
+         <p:tabMenu activeIndex="1">
+            
+            <p:menuitem value="Home" icon="ui-icon-home" iconPos="top" url="/index.xhtml" />          
+            <p:menuitem value="Times" icon="ui-icon-gear" iconPos="top" url="/times/menu.xhtml" />
+            <p:menuitem value="Torneios" icon="ui-icon-gear" iconPos="top" url="/torneios/menu.xhtml" />
+            <p:menuitem value="Resultados" icon="ui-icon-gear" iconPos="top" url="/resultados/menu.xhtml" />
+            
+         </p:tabMenu>
+      </h:form>     
+   </ui:define>
+<!-- /////////////////////////////// -->
+
+
+<!-- Secao body -->
+   <ui:define name="content">
+      
+      <p:panel header="Bem-Vindo!">
+         
+         <h:form id="novo-reg">
+            
+            
+		<pm:field>
+               <p:outputLabel value="Nome: " for="nome" />
+               <p:inputText id="nome" maxlength="15" required="true" requiredMessage="Por favor informe um login!" 
+                            value="#{timeController.timeAtual.nome}"/>
+            </pm:field>
+            
+            
+            <pm:field>
+               <p:outputLabel value="Status: " for="status" />
+               <p:selectOneMenu id="status" required="true" requiredMessage="Por favor informe um login!" 
+                                value="#{timeController.timeAtual.status}">
+               
+                  <f:selectItem itemLabel="Selecione um status" itemValue="#{null}" />
+                  <f:selectItem itemLabel="Ativo" itemValue="Ativo" />
+                  <f:selectItem itemLabel="Inativo" itemValue="Inativo" />
+               
+               </p:selectOneMenu>
+            </pm:field>
+            
+            <p:commandButton value="Adicionar" id="btn-adicionar" icon="ui-icon-check"
+                             actionListener="#{timeController.adicionar()}" update="novo-reg"/>
+            
+            <p:messages showDetail="true" autoUpdate="true" closable="true" severity="warn"/>
+            <p:messages autoUpdate="true" closable="true" severity="error"/>		
+            <p:messages showDetail="true" autoUpdate="true" closable="true" severity="info"/>
+            
+         </h:form>
+        
+      </p:panel>
+      
+   </ui:define>
+   
+</ui:composition>
+</html>

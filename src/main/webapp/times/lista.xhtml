@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:pm="http://primefaces.org/mobile">
+	  
+<ui:composition template="/WEB-INF/templates/layoutBase.xhtml">
+
+<!-- Secao header -->
+   <ui:define name="header">    
+      <h:form>
+         <p:tabMenu activeIndex="1">
+            
+            <p:menuitem value="Home" icon="ui-icon-home" iconPos="top" url="/index.xhtml" />          
+            <p:menuitem value="Times" icon="ui-icon-gear" iconPos="top" url="/times/menu.xhtml" />
+            <p:menuitem value="Torneios" icon="ui-icon-gear" iconPos="top" url="/torneios/menu.xhtml" />
+            <p:menuitem value="Resultados" icon="ui-icon-gear" iconPos="top" url="/resultados/menu.xhtml" />
+            
+         </p:tabMenu>
+      </h:form>     
+   </ui:define>
+<!-- /////////////////////////////// -->
+
+
+<!-- Secao body -->
+   <ui:define name="content">   
+      
+      <p:dialog id="dialog-edit" widgetVar="dialog-edit" modal="true" 
+                resizable="false" height="auto" >
+      
+         <ui:include src="editar.xhtml" />
+      </p:dialog>
+      
+      <h:form id="form-list" >
+         
+         <p:dataTable id="lista-reg" rows="10" paginator="true" var="time"
+                      value="#{timeController.listaTime}">
+            
+            <p:column headerText="ID" style="width:25px;">
+               <h:outputText value="#{time.idTime}" />
+            </p:column>
+            
+            <p:column headerText="Nome" style="width:60%;">
+               <h:outputText value="#{time.nome}" />
+            </p:column>
+            
+            <p:column headerText="Pontuação" style="width:20%;">
+               <h:outputText value="#{time.pontuacaoTotal}" />
+            </p:column>
+            
+            <p:column headerText="Status" style="width:20%;">
+               <h:outputText value="#{time.status}" />
+            </p:column>
+            
+            <p:column headerText="" style="width:25px;">
+                  <p:commandButton icon="ui-icon-edit" ajax="true"     
+                                   actionListener="#{timeController.editar(time)}" />
+            </p:column>
+           
+            <p:column headerText="" style="width:25px;">
+               <p:commandButton icon="ui-icon-delete" ajax="true"
+                                update="@form" actionListener="#{timeController.deletar(time)}"  />
+            </p:column>   
+            
+            <!-- oncomplete="PF('dialog-edit').show();" update="dialog-edit"-->
+            
+         </p:dataTable>
+         
+         <pm:field>
+            <p:outputLabel value="Filtro: (Nome)" for="filtro" />
+            <p:inputText id="filtro" maxlength="15" value="#{timeController.timeAtual.nome}">
+            
+               <p:ajax event="keyup" update="lista-reg" listener="#{timeController.procurar()}" />
+            
+            </p:inputText>
+         </pm:field>
+         
+      </h:form>
+      
+   </ui:define>
+<!-- /////////////////////////////// -->
+   
+</ui:composition>
+</html>
