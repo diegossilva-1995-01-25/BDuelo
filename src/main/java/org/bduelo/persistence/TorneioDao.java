@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.persistence.StoredProcedureQuery;
 
 import org.bduelo.model.Torneio;
 import org.bduelo.util.TarefasComuns;
@@ -37,7 +38,18 @@ public class TorneioDao implements DaoGenerica<Torneio, Integer> {
 	public void update(Torneio torneio) {
 		
 		entityManager = TarefasComuns.getInstanciaEntityManager();
-		entityManager.merge(torneio);
+		/*entityManager.merge(torneio);*/
+            
+            StoredProcedureQuery query;
+            query = entityManager.createNamedStoredProcedureQuery("Torneio.update");
+            
+            query.setParameter("id", torneio.getIdTorneio() );
+            query.setParameter("dataTorn", torneio.getData() );
+            query.setParameter("inicio", torneio.getHoraInicio() );
+            query.setParameter("fim", torneio.getHoraFim() );
+            query.setParameter("partida", torneio.getJogo() );
+            
+            query.execute();
 	}
 
 	/* (non-Javadoc)
@@ -75,7 +87,7 @@ public class TorneioDao implements DaoGenerica<Torneio, Integer> {
 		entityManager = TarefasComuns.getInstanciaEntityManager();
 		Query query = entityManager.createNamedQuery("Torneio.selectMulti");
 		
-		query.setParameter("data", "%" + torneio.getData() + "%" );
+		query.setParameter("data", torneio.getData() );
 		
 		return query.setMaxResults(100).getResultList();
 	}

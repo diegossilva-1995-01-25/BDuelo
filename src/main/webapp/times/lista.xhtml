@@ -2,12 +2,18 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
 	  xmlns:h="http://java.sun.com/jsf/html"
-	  xmlns:f="http://java.sun.com/jsf/core"
 	  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	  xmlns:p="http://primefaces.org/ui"
 	  xmlns:pm="http://primefaces.org/mobile">
 	  
 <ui:composition template="/WEB-INF/templates/layoutBase.xhtml">
+
+<!-- Secao title -->   
+   <ui:define name="titulo"> 
+      <title> Lista de times </title>
+   </ui:define>
+<!-- /////////////////////////////// -->
+
 
 <!-- Secao header -->
    <ui:define name="header">    
@@ -56,7 +62,8 @@
             </p:column>
             
             <p:column headerText="" style="width:25px;">
-                  <p:commandButton icon="ui-icon-edit" ajax="true"     
+                  <p:commandButton icon="ui-icon-edit" ajax="true"
+                                   oncomplete="PF('dialog-edit').show();" update="dialog-edit"
                                    actionListener="#{timeController.editar(time)}" />
             </p:column>
            
@@ -70,13 +77,11 @@
          </p:dataTable>
          
          <pm:field>
-            <p:outputLabel value="Filtro: (Nome)" for="filtro" />
-            <p:inputText id="filtro" maxlength="15" value="#{timeController.timeAtual.nome}">
-            
-               <p:ajax event="keyup" update="lista-reg" listener="#{timeController.procurar()}" />
-            
-            </p:inputText>
+            <p:outputLabel value="Procurar por nome: " for="filtro" />
+            <p:inputText id="filtro" maxlength="15" value="#{timeController.timeAtual.nome}" />      
          </pm:field>
+         
+         <p:commandButton value="Procurar" update="lista-reg" actionListener="#{timeController.procurar()}" />
          
       </h:form>
       

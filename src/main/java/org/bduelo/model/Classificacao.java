@@ -11,7 +11,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.NamedStoredProcedureQuery;
+import javax.persistence.ParameterMode;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.StoredProcedureParameter;
 import javax.persistence.Table;
 
 @Entity
@@ -22,6 +25,17 @@ import javax.persistence.Table;
 	@NamedQuery(name="Classificacao.selectMulti", 
     			query="SELECT c FROM Classificacao c WHERE c.posicao LIKE :posicao")
 })
+@NamedStoredProcedureQuery(
+        name="Classificacao.update",
+        procedureName="UPDATE_TB_CLASSIFICACAO",
+        parameters={
+            @StoredProcedureParameter(mode= ParameterMode.IN, type = Integer.class, name="idClassif"),
+            @StoredProcedureParameter(mode= ParameterMode.IN, type = Integer.class, name="idTime"),
+            @StoredProcedureParameter(mode= ParameterMode.IN, type = Integer.class, name="idTorn"),
+            @StoredProcedureParameter(mode= ParameterMode.IN, type = Integer.class, name="posic"),
+            @StoredProcedureParameter(mode= ParameterMode.IN, type = Integer.class, name="points")
+        }
+)
 public class Classificacao implements Serializable {
 
 	/**
@@ -36,10 +50,10 @@ public class Classificacao implements Serializable {
       @SequenceGenerator(name="CLASSEQ", sequenceName="CLAS_SEQ")
 	private int idClassificacao;
 	
-	private byte posicao;
+	private int posicao;
 	
 	@Column(name="pontuacao_time")
-	private byte pontuacaoTime;
+	private int pontuacaoTime;
 	
 	@ManyToOne
 	@JoinColumn(name="id_time")
@@ -61,18 +75,20 @@ public class Classificacao implements Serializable {
 	}
 
 	
-	public byte getPosicao() {
+	public int getPosicao() {
 		return posicao;
 	}
-	public void setPosicao(byte posicao) {
+	public void setPosicao(int posicao) {
 		this.posicao = posicao;
 	}
 	
 
-	public byte getPontuacaoTime() {
+	public int getPontuacaoTime() {
+            
 		return pontuacaoTime;
 	}
-	public void setPontuacaoTime(byte pontuacaoTime) {
+	public void setPontuacaoTime(int pontuacaoTime) {
+          
 		this.pontuacaoTime = pontuacaoTime;
 	}
 

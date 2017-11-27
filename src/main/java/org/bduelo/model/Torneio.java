@@ -10,7 +10,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.NamedStoredProcedureQuery;
+import javax.persistence.ParameterMode;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.StoredProcedureParameter;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -23,6 +26,17 @@ import javax.persistence.TemporalType;
 	@NamedQuery(name="Torneio.selectMulti", 
 			    query="SELECT t FROM Torneio t WHERE t.data LIKE :data")	
 })
+@NamedStoredProcedureQuery(
+        name="Torneio.update",
+        procedureName="UPDATE_TB_TORNEIO",
+        parameters={
+            @StoredProcedureParameter(mode= ParameterMode.IN, type = Integer.class, name="id"),
+            @StoredProcedureParameter(mode= ParameterMode.IN, type = Date.class, name="dataTorn"),
+            @StoredProcedureParameter(mode= ParameterMode.IN, type = Date.class, name="inicio"),
+            @StoredProcedureParameter(mode= ParameterMode.IN, type = Date.class, name="fim"),
+            @StoredProcedureParameter(mode= ParameterMode.IN, type = String.class, name="partida")
+        }
+)
 public class Torneio implements Serializable {
 
 	/**
@@ -41,11 +55,11 @@ public class Torneio implements Serializable {
 	private Date data;
 	
 	@Column(name="hora_inicio")
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date horaInicio;
 	
 	@Column(name="hora_fim")
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date horaFim;
 	private String jogo;
 	

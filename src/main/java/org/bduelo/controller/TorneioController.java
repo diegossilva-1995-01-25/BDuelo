@@ -15,6 +15,7 @@ import javax.inject.Named;
 import org.bduelo.model.Torneio;
 import org.bduelo.persistence.DaoGenerica;
 import org.bduelo.persistence.TorneioDao;
+import org.bduelo.util.TarefasComuns;
 
 /**
  * @author Caio
@@ -60,6 +61,7 @@ public class TorneioController implements Serializable, ControllerGenerico<Torne
 	public void adicionar() {
 		
 		torneioDao.insert( torneioAtual );
+            TarefasComuns.mensagem( "Torneio para " +  torneioAtual.getJogo() + " adicionado com sucesso!");
 		torneioAtual = new Torneio();
 	}
 

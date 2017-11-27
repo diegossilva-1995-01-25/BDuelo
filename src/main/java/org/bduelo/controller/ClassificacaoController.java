@@ -13,8 +13,11 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.bduelo.model.Classificacao;
+import org.bduelo.model.Time;
+import org.bduelo.model.Torneio;
 import org.bduelo.persistence.ClassificacaoDao;
 import org.bduelo.persistence.DaoGenerica;
+import org.bduelo.util.TarefasComuns;
 
 /**
  * @author Caio
@@ -34,12 +37,16 @@ public class ClassificacaoController implements Serializable, ControllerGenerico
 	 * 
 	 */
 	@Inject private Classificacao classificacaoAtual;
+      private Classificacao[] listaAtual;
+      private int[] listaColocacao;
 	private DaoGenerica<Classificacao, Integer> classificacaoDao;
 	
 	@Produces
 	@Named("classificacaoList")
 	private List<Classificacao> listaClassificacao;
 	
+      @Inject private List<Time> listaTimes;
+      @Inject private List<Torneio> listaTorneio;
 	
 	/* (non-Javadoc)
 	 * @see org.bduelo.controller.ControllerGenerico#init()
@@ -59,8 +66,19 @@ public class ClassificacaoController implements Serializable, ControllerGenerico
 	@Override
 	public void adicionar() {
 		
-		classificacaoDao.insert( classificacaoAtual );
+            for(int i = 0; i < listaAtual.length; i++) {
+                classificacaoDao.insert( listaAtual[i] );
+            }
+            
+            TarefasComuns.mensagem( "Resultado do torneio "
+                   + classificacaoAtual.getTorneio().getData()
+                   + classificacaoAtual.getTorneio().getJogo()
+                   + " adicionado com sucesso!");
+            
 		classificacaoAtual = new Classificacao();
+            
+            listaAtual = new Classificacao[0];
+            listaColocacao = new int[0];
 	}
 
 	
@@ -69,8 +87,19 @@ public class ClassificacaoController implements Serializable, ControllerGenerico
 	 */
 	@Override
 	public void editar(Classificacao classificacao) {
-		
-		classificacaoAtual = classificacao;
+			
+            int indice = 0;
+            
+            for (Classificacao c : listaClassificacao)               
+                if (c.getTorneio().equals( classificacao.getTorneio() )) indice++;
+            
+            
+            listaColocacao = new int[indice];
+            
+            for (int j = 0; j < indice; j++)       
+                listaColocacao[j] = j+1;  
+            
+            classificacaoAtual = classificacao;
 	}
 
 	
@@ -84,6 +113,7 @@ public class ClassificacaoController implements Serializable, ControllerGenerico
 		listaClassificacao = classificacaoDao.selectListaLimitada();
 		
 		classificacaoAtual = new Classificacao();
+            listaColocacao = new int[0];
 	}
 
 	
@@ -104,11 +134,39 @@ public class ClassificacaoController implements Serializable, ControllerGenerico
 	@Override
 	public void procurar() {
 		
-		listaClassificacao = classificacaoDao.selectMultiplos(classificacaoAtual);
+		if (classificacaoAtual.getPosicao() > 0) {
+                
+                listaClassificacao = classificacaoDao.selectMultiplos(classificacaoAtual);
+            } 
+            else {
+                listaClassificacao = classificacaoDao.selectListaLimitada();
+            }
 		classificacaoAtual = new Classificacao();
 	}
 
+      
+      /* (non-Javadoc)
+	 * @see org.bduelo.controller.ControllerGenerico#procurar()
+	 */
+	public void setNumeroDeTimes(int indice) {
+		
+            System.out.println( indice );
+            System.out.println( classificacaoAtual.getTorneio() == null );
+          
+		listaAtual = new Classificacao[indice];
+            listaColocacao = new int[indice];
+            
+            for (int i = 0; i < listaAtual.length; i++)  {
+                
+                listaColocacao[i] = i+1;
+                listaAtual[i] = new Classificacao();
+                listaAtual[i].setTorneio( classificacaoAtual.getTorneio() );
+            }
+            
+            classificacaoAtual = new Classificacao();
+	}
 
+      
 	/*
 	 * 
 	 */
@@ -125,6 +183,37 @@ public class ClassificacaoController implements Serializable, ControllerGenerico
 	}
 	public void setListaClassificacao(List<Classificacao> listaClassificacao) {
 		this.listaClassificacao = listaClassificacao;
-	}
+	} 
+      
+      public List<Time> getListaTimes() {
+            return listaTimes;
+      }
+      public void setListaTimes(List<Time> listaTimes) {
+            this.listaTimes = listaTimes;
+      }
 
+    
+      public List<Torneio> getListaTorneio() {
+            return listaTorneio;
+      }
+      public void setListaTorneio(List<Torneio> listaTorneio) {
+            this.listaTorneio = listaTorneio;
+      }
+
+      
+      public int[] getListaColocacao() {
+            return listaColocacao;
+      }
+      public void setListaColocacao(int[] listaColocacao) {
+            this.listaColocacao = listaColocacao;
+      }
+
+      
+      public Classificacao[] getListaAtual() {
+            return listaAtual;
+      }
+      public void setListaAtual(Classificacao[] listaAtual) {
+            this.listaAtual = listaAtual;
+      }
+      
 }

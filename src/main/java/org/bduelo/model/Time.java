@@ -9,7 +9,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.NamedStoredProcedureQuery;
+import javax.persistence.ParameterMode;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.StoredProcedureParameter;
 import javax.persistence.Table;
 
 @Entity
@@ -20,6 +23,15 @@ import javax.persistence.Table;
 	@NamedQuery(name="Time.selectMulti", 
 			    query="SELECT t FROM Time t WHERE t.nome LIKE :nome")
 })
+@NamedStoredProcedureQuery(
+        name="Time.update",
+        procedureName="UPDATE_TB_TIME",
+        parameters={
+            @StoredProcedureParameter(mode= ParameterMode.IN, type = Integer.class, name="id"),
+            @StoredProcedureParameter(mode= ParameterMode.IN, type = String.class, name="nom"),
+            @StoredProcedureParameter(mode= ParameterMode.IN, type = String.class, name="estado")
+        }
+)
 public class Time implements Serializable {
 
 	/**

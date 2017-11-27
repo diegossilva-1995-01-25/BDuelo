@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.persistence.StoredProcedureQuery;
 
 import org.bduelo.model.Time;
 import org.bduelo.util.TarefasComuns;
@@ -37,7 +38,16 @@ public class TimeDao implements DaoGenerica<Time, Integer> {
 	public void update(Time time) {
 		
 		entityManager = TarefasComuns.getInstanciaEntityManager();
-		entityManager.merge(time);
+		/*entityManager.merge(time);*/
+            
+            StoredProcedureQuery query;
+            query = entityManager.createNamedStoredProcedureQuery("Time.update");
+            
+            query.setParameter("id", time.getIdTime() );
+            query.setParameter("nom", time.getNome() );
+            query.setParameter("estado", time.getStatus() );
+            
+            query.execute();
 	}
 
 	/* (non-Javadoc)

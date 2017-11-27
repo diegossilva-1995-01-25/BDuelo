@@ -2,12 +2,18 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
 	  xmlns:h="http://java.sun.com/jsf/html"
-	  xmlns:f="http://java.sun.com/jsf/core"
 	  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	  xmlns:p="http://primefaces.org/ui"
 	  xmlns:pm="http://primefaces.org/mobile">
 	  
 <ui:composition template="/WEB-INF/templates/layoutBase.xhtml">
+
+<!-- Secao title -->   
+   <ui:define name="titulo"> 
+      <title> Lista de resultados </title>
+   </ui:define>
+<!-- /////////////////////////////// -->
+
 
 <!-- Secao header -->
    <ui:define name="header">    
@@ -26,19 +32,71 @@
 
 
 <!-- Secao body -->
-   <ui:define name="content">
+   <ui:define name="content">   
       
-      <p:panel header="Bem-Vindo!">
+      <p:dialog id="dialog-edit" widgetVar="dialog-edit" modal="true" 
+                resizable="false" height="auto" >
+      
+         <ui:include src="editar.xhtml" />
+      </p:dialog>
+      
+      <h:form id="form-list" >
          
-      	<h:form >
-		   <p:menu>
-		    
-		   </p:menu>
-        </h:form>
-        
-      </p:panel>
+         <p:dataTable id="lista-reg" rows="10" paginator="true" var="classificacao"
+                      value="#{classificacaoController.listaClassificacao}">
+            
+            <p:column headerText="ID" style="width:25px;">
+               <h:outputText value="#{classificacao.idClassificacao}" />
+            </p:column>
+            
+            <p:column headerText="Data" style="width:20%;">
+               <h:outputText value="#{classificacao.torneio.data}" />
+            </p:column>
+            
+            <p:column headerText="Jogo" style="width:20%;">
+               <h:outputText value="#{classificacao.torneio.jogo}" />
+            </p:column>
+            
+            <p:column headerText="Time" style="width:20%;">
+               <h:outputText value="#{classificacao.time.nome}" />
+            </p:column>
+            
+            <p:column headerText="Posição" style="width:20%;">
+               <h:outputText value="#{classificacao.posicao}º lugar" />
+            </p:column>
+            
+            <p:column headerText="Pontuação" style="width:20%;">
+               <h:outputText value="#{classificacao.pontuacaoTime}" />
+            </p:column>
+            
+            <p:column headerText="" style="width:25px;">
+                  <p:commandButton icon="ui-icon-edit" ajax="true"
+                           oncomplete="PF('dialog-edit').show();" update="dialog-edit"
+                           actionListener="#{classificacaoController.editar(classificacao)}" />
+            </p:column>
+           
+            <p:column headerText="" style="width:25px;">
+               <p:commandButton icon="ui-icon-delete" ajax="true" update="@form"
+                           actionListener="#{classificacaoController.deletar(classificacao)}"  />
+            </p:column>   
+            
+            <!-- oncomplete="PF('dialog-edit').show();" update="dialog-edit"-->
+            
+         </p:dataTable>
+         
+         <pm:field>
+            <p:outputLabel value="Procurar por posição: " for="filtro" />
+            <p:inputText id="filtro" maxlength="2" 
+                         value="#{classificacaoController.classificacaoAtual.posicao}" />      
+         </pm:field>
+         
+         <p:commandButton value="Procurar" update="lista-reg" 
+                          actionListener="#{classificacaoController.procurar()}" />
+         
+      </h:form>
       
    </ui:define>
+<!-- /////////////////////////////// -->
    
 </ui:composition>
 </html>

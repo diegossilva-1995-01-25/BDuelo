@@ -2,17 +2,24 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
 	  xmlns:h="http://java.sun.com/jsf/html"
-	  xmlns:f="http://java.sun.com/jsf/core"
 	  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	  xmlns:p="http://primefaces.org/ui"
-	  xmlns:pm="http://primefaces.org/mobile">
+	  xmlns:pm="http://primefaces.org/mobile"
+        xmlns:pe="http://primefaces.org/ui/extensions">
 	  
 <ui:composition template="/WEB-INF/templates/layoutBase.xhtml">
+
+<!-- Secao title -->   
+   <ui:define name="titulo"> 
+      <title> Novo torneio </title>
+   </ui:define>
+<!-- /////////////////////////////// -->
+
 
 <!-- Secao header -->
    <ui:define name="header">    
       <h:form>
-         <p:tabMenu activeIndex="1">
+         <p:tabMenu activeIndex="2">
             
             <p:menuitem value="Home" icon="ui-icon-home" iconPos="top" url="/index.xhtml" />          
             <p:menuitem value="Times" icon="ui-icon-gear" iconPos="top" url="/times/menu.xhtml" />
@@ -28,13 +35,49 @@
 <!-- Secao body -->
    <ui:define name="content">
       
-      <p:panel header="Bem-Vindo!">
+      <p:panel header="Adicionar novo torneio">
          
-      	<h:form >
-		   <p:menu>
-		    
-		   </p:menu>
-        </h:form>
+         <h:form id="novo-reg">
+            
+            
+		<pm:field>
+               <p:outputLabel value="Data: " for="data" />
+               <p:calendar id="data" required="true" requiredMessage="Por favor informe a data!" 
+                           value="#{torneioController.torneioAtual.data}" 
+                           pattern="dd/MM/yyyy" timeZone="America/Bahia"/>
+            </pm:field>
+            
+            
+            <pm:field>
+               <p:outputLabel value="Horário: " for="horarioGrid" />
+               <h:panelGrid id="horarioGrid" columns="2" >
+                  <p:outputLabel value="Das: " for="inicio" />
+                  <pe:timePicker id="inicio" required="true" requiredMessage="Por favor informe a hora inicial!"
+                                 showCloseButton="true" showNowButton="true" 
+                                 value="#{torneioController.torneioAtual.horaInicio}" />
+                  
+                  
+                  <p:outputLabel value="As: " for="fim" />
+                  <pe:timePicker id="fim" required="true" requiredMessage="Por favor informe o limite de tempo!"
+                                 showCloseButton="true" showNowButton="true"
+                                 value="#{torneioController.torneioAtual.horaFim}"/>
+               </h:panelGrid>
+            </pm:field>
+            
+            
+            <pm:field>
+               <p:outputLabel value="Jogo: " for="jogo" />
+               <p:inputText id="jogo" value="#{torneioController.torneioAtual.jogo}" />
+            </pm:field>
+            
+            <p:commandButton value="Adicionar" id="btn-adicionar" icon="ui-icon-check"
+                             actionListener="#{torneioController.adicionar()}" update="novo-reg"/>
+            
+            <p:messages showDetail="true" autoUpdate="true" closable="true" severity="warn"/>
+            <p:messages autoUpdate="true" closable="true" severity="error"/>		
+            <p:messages showDetail="true" autoUpdate="true" closable="true" severity="info"/>
+            
+         </h:form>
         
       </p:panel>
       

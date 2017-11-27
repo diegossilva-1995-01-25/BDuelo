@@ -2,12 +2,19 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
 	  xmlns:h="http://java.sun.com/jsf/html"
-	  xmlns:f="http://java.sun.com/jsf/core"
 	  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	  xmlns:p="http://primefaces.org/ui"
-	  xmlns:pm="http://primefaces.org/mobile">
+        xmlns:pm="http://primefaces.org/mobile"
+        xmlns:f="http://xmlns.jcp.org/jsf/core">
 	  
 <ui:composition template="/WEB-INF/templates/layoutBase.xhtml">
+
+<!-- Secao title -->   
+   <ui:define name="titulo"> 
+      <title> Lista de torneios </title>
+   </ui:define>
+<!-- /////////////////////////////// -->
+
 
 <!-- Secao header -->
    <ui:define name="header">    
@@ -26,17 +33,75 @@
 
 
 <!-- Secao body -->
-   <ui:define name="content">
+   <ui:define name="content">   
       
-      <p:panel header="Bem-Vindo!">
+      <p:dialog id="dialog-edit" widgetVar="dialog-edit" modal="true" 
+                resizable="false" height="auto" >
+      
+         <ui:include src="editar.xhtml" />
+      </p:dialog>
+      
+      <h:form id="form-list" >
          
-      	<h:form >
-		   <p:menu>
-		    
-		   </p:menu>
-        </h:form>
-        
-      </p:panel>
+         <p:dataTable id="lista-reg" rows="10" paginator="true" var="torneio"
+                      value="#{torneioController.listaTorneio}">
+            
+            <p:column headerText="ID" style="width:25px;">
+               <h:outputText value="#{torneio.idTorneio}" />
+            </p:column>
+            
+            <p:column headerText="Data" style="width:20%;">
+               <h:outputText value="#{torneio.data}">
+                  
+                  <f:convertDateTime pattern="dd/MM/yyyy"/>
+                  
+               </h:outputText>
+            </p:column>
+            
+            <p:column headerText="Hora inicial" style="width:20%;">
+               <h:outputText value="#{torneio.horaInicio}">
+                  
+                  <f:convertDateTime pattern="HH:mm" timeZone="America/Bahia"/>
+                  
+               </h:outputText>
+            </p:column>
+            
+            <p:column headerText="Hora final" style="width:20%;">
+               <h:outputText value="#{torneio.horaFim}">
+                  
+                  <f:convertDateTime pattern="HH:mm" timeZone="America/Bahia"/>
+                  
+               </h:outputText>
+            </p:column>
+            
+            <p:column headerText="Jogo" style="width:40%;">
+               <h:outputText value="#{torneio.jogo}" />
+            </p:column>
+            
+            <p:column headerText="" style="width:25px;">
+                  <p:commandButton icon="ui-icon-edit" ajax="true"
+                                   oncomplete="PF('dialog-edit').show();" update="dialog-edit"
+                                   actionListener="#{torneioController.editar(torneio)}" />
+            </p:column>
+           
+            <p:column headerText="" style="width:25px;">
+               <p:commandButton icon="ui-icon-delete" ajax="true"
+                                update="@form" actionListener="#{torneioController.deletar(torneio)}"  />
+            </p:column>   
+            
+            <!-- oncomplete="PF('dialog-edit').show();" update="dialog-edit"-->
+            
+         </p:dataTable>
+         
+         <pm:field>
+            <p:outputLabel value="Procurar por data: " for="filtro" />
+            <p:calendar id="filtro" value="#{torneioController.torneioAtual.data}" 
+                        pattern="dd/MM/yyyy" mask="true" timeZone="America/Bahia"/>      
+         </pm:field>
+         
+         <p:commandButton value="Procurar" update="lista-reg" actionListener="#{torneioController.procurar()}" />
+         
+      </h:form>
       
    </ui:define>
 <!-- /////////////////////////////// -->

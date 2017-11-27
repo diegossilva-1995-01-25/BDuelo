@@ -11,31 +11,45 @@
       
       <pm:field>
          <p:outputLabel value="ID: " for="id" />
-         <h:outputText id="id" value="#{timeController.timeAtual.idTime}"/>
-      </pm:field>
-      
-            
-      <pm:field>
-         <p:outputLabel value="Nome: " for="nome" />
-         <p:inputText id="nome" maxlength="15" required="true" requiredMessage="Por favor informe um login!" 
-                      value="#{timeController.timeAtual.nome}"/>
+         <h:outputText id="id" value="#{classificacaoController.classificacaoAtual.idClassificacao}"/>
       </pm:field>
       
       
       <pm:field>
-         <p:outputLabel value="Status: " for="status" />
-         <p:selectOneMenu id="status" required="true" requiredMessage="Por favor informe um login!" 
+         <p:outputLabel value="Torneio: " for="torneio" />
+         <h:outputText id="torneio" 
+                       value="#{classificacaoController.classificacaoAtual.torneio.data}
+                       #{classificacaoController.classificacaoAtual.torneio.jogo}"/>
+      </pm:field>
+      
+      
+      <pm:field>
+         <p:outputLabel value="Time: " for="time" />
+         <h:outputText id="time" value="#{classificacaoController.classificacaoAtual.time.nome}"/>
+      </pm:field>
+      
+      
+      <pm:field>
+         <p:outputLabel value="Posição: " for="pos" />
+         <p:selectOneMenu id="pos" required="true" requiredMessage="Por favor informe uma posição!" 
                           value="#{timeController.timeAtual.status}">
          
             <f:selectItem itemLabel="Selecione um status" itemValue="#{null}" />
-            <f:selectItem itemLabel="Ativo" itemValue="Ativo" />
-            <f:selectItem itemLabel="Inativo" itemValue="Inativo" />
+            <f:selectItems value="#{classificacaoController.listaColocacao}" var="pos"
+                           itemLabel="#{pos} º lugar" itemValue="#{pos}"/>
          
          </p:selectOneMenu>
       </pm:field>
       
+      
+      <pm:field>
+         <p:outputLabel value="Pontuação: " for="pontos" />
+         <p:inputText id="pontos" value="#{classificacaoController.classificacaoAtual.pontuacaoTime}"/>
+      </pm:field>
+      
+      
       <p:commandButton value="Atualizar" id="btn-atualizar" icon="ui-icon-check"
-                       actionListener="#{timeController.atualizar()}" update="form-list"
+                       actionListener="#{classificacaoController.atualizar()}" update="form-list"
                        oncomplete="if (args &amp;&amp; !args.validationFailed) PF('dialog-edit').hide();"/>
       
       <p:messages showDetail="true" autoUpdate="true" closable="true" severity="warn"/>

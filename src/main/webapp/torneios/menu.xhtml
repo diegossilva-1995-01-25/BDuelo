@@ -9,10 +9,17 @@
 	  
 <ui:composition template="/WEB-INF/templates/layoutBase.xhtml">
 
+<!-- Secao title -->   
+   <ui:define name="titulo"> 
+      <title> Controle de torneios </title>
+   </ui:define>
+<!-- /////////////////////////////// -->
+
+
 <!-- Secao header -->
    <ui:define name="header">    
       <h:form>
-         <p:tabMenu activeIndex="1">
+         <p:tabMenu activeIndex="2">
             
             <p:menuitem value="Home" icon="ui-icon-home" iconPos="top" url="/index.xhtml" />          
             <p:menuitem value="Times" icon="ui-icon-gear" iconPos="top" url="/times/menu.xhtml" />
@@ -28,7 +35,7 @@
 <!-- Secao body -->
    <ui:define name="content">
       
-      <p:panel header="Torneios">
+      <p:panel header="Controle de torneios">
          
          <h:form >
 		<p:menu>

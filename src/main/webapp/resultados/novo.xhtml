@@ -9,6 +9,13 @@
 	  
 <ui:composition template="/WEB-INF/templates/layoutBase.xhtml">
 
+<!-- Secao title -->   
+   <ui:define name="titulo"> 
+      <title> Registrar resultados </title>
+   </ui:define>
+<!-- /////////////////////////////// -->
+
+
 <!-- Secao header -->
    <ui:define name="header">    
       <h:form>
@@ -28,15 +35,93 @@
 <!-- Secao body -->
    <ui:define name="content">
       
-      <p:panel header="Bem-Vindo!">
+   <p:tabView id="view-reg">
          
-      	<h:form >
-		   <p:menu>
-		    
-		   </p:menu>
-        </h:form>
+      <p:tab title="Configurações" >
+         <h:form id="conf-reg">
+                  
+            
+            <pm:field>
+               <p:outputLabel value="Torneio: " for="torneio" />
+               <p:selectOneMenu id="torneio" required="true" converter="torneioConverter"
+                                requiredMessage="Por favor informe um torneio!" 
+                                value="#{classificacaoController.classificacaoAtual.torneio}">
+               
+                  <f:selectItem itemLabel="Selecione um torneio" itemValue="#{null}" />
+                  <f:selectItems value="#{classificacaoController.listaTorneio}" var="torneio"
+                                 itemLabel="#{torneio.data} - #{torneio.jogo}" 
+                                 itemValue="#{torneio}" />       
+               </p:selectOneMenu>
+            </pm:field>
+            
+            
+            <pm:field>
+               <p:outputLabel value="Nº de participantes: " for="parts"/>
+               <pm:inputSlider id="parts" binding="#{nDeParts}" maxValue="32" />
+            </pm:field>
+            
+            
+            <p:commandButton value="Gerar lista" update="view-reg"
+                             action="#{classificacaoController.setNumeroDeTimes(nDeParts.value)}" />
+                 
+            <p:messages showDetail="true" autoUpdate="true" closable="true" severity="warn"/>
+            <p:messages autoUpdate="true" closable="true" severity="error"/>		
+            <p:messages showDetail="true" autoUpdate="true" closable="true" severity="info"/>
+            
+         </h:form>
+      </p:tab>
+      <p:tab title="Adicionar resultados">
+         <h:form id="novo-reg">
+
+            
+            <p:dataTable id="lista-times" value="#{classificacaoController.listaAtual}" 
+                         var="classificacao" rows="8" paginator="true">
+               
+               <p:column headerText="Torneio">
+                  <h:outputText value="#{classificacao.torneio.data}" />
+               </p:column>
+               
+               <p:column headerText="Time">
+                  <p:selectOneMenu id="time" required="true" converter="timeConverter"
+                                   requiredMessage="Por favor preencha todos os times!" 
+                                   value="#{classificacao.time}">
+                  
+                     <f:selectItem itemLabel="Selecione um time" itemValue="#{null}" />
+                     <f:selectItems value="#{classificacaoController.listaTimes}" var="time"
+                                    itemLabel="#{time.nome}" itemValue="#{time}"/>
+                     
+                  </p:selectOneMenu>    
+               </p:column>
+               
+               <p:column headerText="Posição">
+                  <p:selectOneMenu id="pos" required="true" value="#{classificacao.posicao}"
+                                   requiredMessage="Por favor preencha todas as posições!">
+                  
+                     <f:selectItem itemLabel="Selecione uma posição" itemValue="#{null}" />
+                     <f:selectItems value="#{classificacaoController.listaColocacao}" var="pos"
+                                    itemLabel="#{pos} º lugar" itemValue="#{pos}"/>
+                     
+                  </p:selectOneMenu>      
+               </p:column>
+               
+               <p:column headerText="Pontuação">
+                  <p:inputText value="#{classificacao.pontuacaoTime}" />
+               </p:column>
+            
+            </p:dataTable>
+            
+            
+            <p:commandButton value="Adicionar" id="btn-adicionar" icon="ui-icon-check"
+                             actionListener="#{classificacaoController.adicionar()}" update="view-reg"/>
+            
+            <p:messages showDetail="true" autoUpdate="true" closable="true" severity="warn"/>
+            <p:messages autoUpdate="true" closable="true" severity="error"/>		
+            <p:messages showDetail="true" autoUpdate="true" closable="true" severity="info"/>
+         
+         </h:form>
+      </p:tab>
         
-      </p:panel>
+   </p:tabView>
       
    </ui:define>
    

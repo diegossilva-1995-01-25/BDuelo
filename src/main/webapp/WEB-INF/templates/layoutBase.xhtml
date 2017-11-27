@@ -4,7 +4,6 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.org/ui"
 	xmlns:pm="http://primefaces.org/mobile">
 
 <f:view renderKitId="PRIMEFACES_MOBILE">
@@ -12,26 +11,23 @@
    <h:head>
      <ui:insert name="titulo"/>
    </h:head>
-   
-<pm:page swatch="b">
 
    <h:body>
 
-      <pm:header fixed="true" >
+      <pm:header fixed="true" swatch="b" >
          <ui:insert name="header" />
       </pm:header>
 
-      <main>
+      <pm:content>
          <ui:insert name="content"/>
-      </main>
+      </pm:content>
 
-      <pm:footer fixed="true" tapToggle="true" >
+      <pm:footer fixed="true" tapToggle="true" swatch="b">
          <ui:include src="footer.xhtml" />
       </pm:footer>
  
    </h:body>
 
-</pm:page>
 </f:view>
 
 </html>

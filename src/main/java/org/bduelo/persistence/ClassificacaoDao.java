@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.persistence.StoredProcedureQuery;
 
 import org.bduelo.model.Classificacao;
 import org.bduelo.util.TarefasComuns;
@@ -38,7 +39,18 @@ public class ClassificacaoDao implements DaoGenerica<Classificacao, Integer> {
 	public void update(Classificacao classificacao) {
 		
 		entityManager = TarefasComuns.getInstanciaEntityManager();
-		entityManager.merge(classificacao);
+		/*entityManager.merge(classificacao);*/
+            
+            StoredProcedureQuery query;
+            query = entityManager.createNamedStoredProcedureQuery("Classificacao.update");
+            
+            query.setParameter("idClassif", classificacao.getIdClassificacao() );
+            query.setParameter("idTime", classificacao.getTime().getIdTime() );
+            query.setParameter("idTorn", classificacao.getTorneio().getIdTorneio() );
+            query.setParameter("posic", classificacao.getPosicao() );
+            query.setParameter("points", classificacao.getPontuacaoTime() );
+            
+            query.execute();
 	}
 
 	
@@ -79,7 +91,7 @@ public class ClassificacaoDao implements DaoGenerica<Classificacao, Integer> {
 		entityManager = TarefasComuns.getInstanciaEntityManager();
 		Query query = entityManager.createNamedQuery("Classificacao.selectMulti");
 		
-		query.setParameter("posicao", "%" + classificacao.getPosicao() + "%" );
+		query.setParameter("posicao", classificacao.getPosicao() );
 		
 		return query.setMaxResults(100).getResultList();
 	}
